@@ -15,7 +15,7 @@ conn.connect();
 // Initialize with dummy values
 if (process.argv.length === 3 && process.argv[2] == 'reset'){
 	let fs = require('fs');
-	let lines = fs.readFileSync('./sql-init', 'utf8').split('\n');
+	let lines = fs.readFileSync('./model/sql-init', 'utf8').split('\n');
 	lines.forEach(function(line){
 		if (line.length === 0)
 			return;

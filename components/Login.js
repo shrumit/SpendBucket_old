@@ -3,7 +3,7 @@ import axios from 'axios';
 
 class Login extends React.Component {
 	
-	getInitialState() {
+	getDefaultState() {
 		return {
 			username: 'demo',
 			password: 'pass',
@@ -13,7 +13,7 @@ class Login extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		this.state = this.getInitialState();
+		this.state = this.getDefaultState();
 		this.handleChange = this.handleChange.bind(this);
 		this.login = this.login.bind(this);
 	}

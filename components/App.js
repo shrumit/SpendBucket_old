@@ -9,7 +9,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		// let init = JSON.parse('{"members":[{"member_id":1,"name":"Rick"},{"member_id":2,"name":"Morty"},{"member_id":3,"name":"Summer"},{"member_id":4,"name":"Beth"},{"member_id":5,"name":"Jerry"}],"transactions":[{"trans_id":1,"type":0,"name":"Costco","date":"2016-09-11","amount":160,"liabilities":[{"creditor":4,"debtor":1,"amount":40},{"creditor":4,"debtor":2,"amount":40},{"creditor":4,"debtor":3,"amount":40}]},{"trans_id":2,"type":0,"name":"McDonalds","date":"2016-09-12","amount":30,"liabilities":[{"creditor":2,"debtor":5,"amount":10},{"creditor":2,"debtor":3,"amount":10}]},{"trans_id":3,"type":0,"name":"Walmart","date":"2016-09-15","amount":50,"liabilities":[{"creditor":5,"debtor":1,"amount":20},{"creditor":5,"debtor":2,"amount":10},{"creditor":5,"debtor":3,"amount":10}]},{"trans_id":4,"type":0,"name":"Five Guys","date":"2016-09-16","amount":40,"liabilities":[{"creditor":4,"debtor":5,"amount":20}]},{"trans_id":5,"type":0,"name":"Dining Table - IKEA","date":"2016-09-17","amount":300,"liabilities":[{"creditor":1,"debtor":2,"amount":60},{"creditor":1,"debtor":3,"amount":60},{"creditor":1,"debtor":4,"amount":60},{"creditor":1,"debtor":5,"amount":60}]}],"transfers":[{"from":3,"to":1,"amount":120},{"from":2,"to":4,"amount":80},{"from":2,"to":1,"amount":10},{"from":5,"to":1,"amount":50}]}');
-		console.log(init);
+		// console.log(init);
 		this.state = {
 			data: {
 				members: [],
