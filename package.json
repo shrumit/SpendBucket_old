@@ -1,0 +1,24 @@
+{
+  "name": "SpendBucket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server"
+  },
+  "author": "shrumit",
+  "dependencies": {
+    "async": "^2.0.1",
+    "axios": "^0.14.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "mysql": "^2.11.1",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "webpack": "^1.13.2"
+  }
+}
