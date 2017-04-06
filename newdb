@@ -1,0 +1,110 @@
+CREATE TABLE Groups (
+  groupId INT NOT NULL AUTO_INCREMENT,
+  passkey VARCHAR(32) UNIQUE,
+  PRIMARY KEY (groupId)
+);
+
+INSERT INTO Groups (passkey) VALUES ("test");
+
+CREATE TABLE Users (
+  userId INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(32) UNIQUE,
+  pword VARCHAR(32),
+  groupId INT,
+  FOREIGN KEY (groupId) REFERENCES Groups (groupId),
+  PRIMARY KEY (userId)
+);
+
+INSERT INTO Users (username, pword, groupId) VALUES ("john", "snow000", 1);
+INSERT INTO Users (username, pword, groupId) VALUES ("dave", "snow000", 1);
+INSERT INTO Users (username, pword, groupId) VALUES ("bill", "snow000", 1);
+
+CREATE TABLE Transactions (
+  transId INT NOT NULL AUTO_INCREMENT,
+  date DATE,
+  name VARCHAR(32),
+  amount DECIMAL(13,2),
+  paidBy INT,
+  groupId INT,
+  FOREIGN KEY (paidBy) REFERENCES Users (userId),
+  FOREIGN KEY (groupId) REFERENCES Groups (groupId),
+  PRIMARY KEY (transId)
+);
+
+INSERT INTO Transactions (date, name, amount, paidBy, groupId) VALUES (CURDATE(), "t1", 90, 1, 1);
+INSERT INTO Transactions (date, name, amount, paidBy, groupId) VALUES (CURDATE(), "t2", 30, 2, 1);
+
+CREATE TABLE SharedBy (
+  transId INT,
+  userId INT,
+  amount DECIMAL(13,2),
+  FOREIGN KEY (transId) REFERENCES Transactions(transId) ON DELETE CASCADE,
+  FOREIGN KEY (userId) REFERENCES Users (userId),
+  PRIMARY KEY(transId, userId)
+);
+
+INSERT INTO SharedBy (transId, userId, amount) VALUES (1, 1, 30);
+INSERT INTO SharedBy (transId, userId, amount) VALUES (1, 2, 30);
+INSERT INTO SharedBy (transId, userId, amount) VALUES (1, 3, 30);
+INSERT INTO SharedBy (transId, userId, amount) VALUES (2, 2, 15);
+INSERT INTO SharedBy (transId, userId, amount) VALUES (2, 3, 15);
+
+CREATE VIEW Debt AS
+  SELECT userId, SUM(amount) as amount
+  FROM SharedBy
+  GROUP BY userId;
+
+CREATE VIEW Paid AS
+  SELECT paidBy as userId, SUM(amount) as amount
+  FROM Transactions
+  GROUP BY paidBy;
+
+-- CREATE VIEW Balance AS
+--   SELECT userId, Paid.amount - Debt.amount AS amount
+--   FROM Debt 
+--   JOIN Paid USING (userId);
+
+-- CREATE VIEW Balance AS
+--   SELECT userId, p.amount AS pamount, d.amount AS damount
+--   FROM Debt d
+--   LEFT OUTER JOIN Paid p USING (userId)
+--   UNION
+--   SELECT userId, p.amount AS pamount, d.amount AS damount
+--   FROM Debt d
+--   RIGHT OUTER JOIN Paid p USING (userId);
+
+CREATE VIEW Balance AS
+  SELECT userId, IFNULL(p.amount, 0) - IFNULL(d.amount, 0) as final
+  FROM Debt d
+  LEFT OUTER JOIN Paid p USING (userId)
+  UNION
+  SELECT userId, IFNULL(p.amount, 0) - IFNULL(d.amount, 0) as final
+  FROM Debt d
+  RIGHT OUTER JOIN Paid p USING (userId);
+
+CREATE VIEW GetTransactions
+  SELECT transId, date, name, paidBy, t.amount, groupId, GROUP_CONCAT(CONCAT(userId, ":", s.amount) ORDER BY userId ASC SEPARATOR ',') AS share
+  FROM Transactions t
+  JOIN SharedBy s USING (transId)
+  WHERE groupId=1
+  GROUP BY transId,
+  ORDER BY date;
+
+-- CREATE TABLE test (
+--   ID INTEGER,
+--   NAME VARCHAR (50),
+--   VALUE INTEGER
+-- );
+
+-- INSERT INTO test VALUES (1, 'A', 4);
+-- INSERT INTO test VALUES (1, 'A', 5);
+-- INSERT INTO test VALUES (1, 'B', 8);
+-- INSERT INTO test VALUES (2, 'C', 9);
+
+-- SELECT ID, GROUP_CONCAT(NAME ORDER BY NAME ASC SEPARATOR ',')
+-- FROM (
+--   SELECT ID, CONCAT(NAME, ':', GROUP_CONCAT(VALUE ORDER BY VALUE ASC SEPARATOR ',')) AS NAME
+--   FROM test
+--   GROUP BY ID, NAME
+-- ) AS A
+-- GROUP BY ID;
